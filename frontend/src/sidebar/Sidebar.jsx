@@ -31,7 +31,7 @@ function Sidebar({
 
     return (
         <div 
-            className="w-[280px] h-screen sticky top-0 left-0 flex flex-col glass-panel border-r border-white/10 z-40 bg-[#0F172A]/10 backdrop-blur-xl shrink-0"
+            className="w-[280px] h-screen fixed top-0 left-0 flex flex-col glass-panel border-r border-white/10 z-40 bg-[#0F172A]/10 backdrop-blur-xl shrink-0"
         >
             {/* Sidebar Brand Logo */}
             <div className="p-6 flex items-center gap-3 border-b border-white/5 overflow-hidden">
