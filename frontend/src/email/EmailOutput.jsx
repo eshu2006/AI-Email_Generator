@@ -22,6 +22,11 @@ import {
 } from "lucide-react";
 
 function EmailOutput({ email, setEmail, loading, onGenerate, user }) {
+    // Grab user data from localStorage directly
+    const storedUserStr = localStorage.getItem("user");
+    const localUser = storedUserStr && storedUserStr !== "undefined" ? JSON.parse(storedUserStr) : null;
+    const currentUser = user || localUser;
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedSubject, setEditedSubject] = useState("");
     const [editedBody, setEditedBody] = useState("");
@@ -73,7 +78,7 @@ function EmailOutput({ email, setEmail, loading, onGenerate, user }) {
     const handleSendGmail = () => {
         if (!email) return;
         const recipient = email.recipient || "";
-        const fromEmail = user?.email || "";
+        const fromEmail = currentUser?.email || "";
         const gmailUrl = fromEmail 
             ? `https://mail.google.com/mail/u/${encodeURIComponent(fromEmail)}/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(editedSubject)}&body=${encodeURIComponent(editedBody)}`
             : `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(editedSubject)}&body=${encodeURIComponent(editedBody)}`;
@@ -83,7 +88,7 @@ function EmailOutput({ email, setEmail, loading, onGenerate, user }) {
     const handleSendOutlook = () => {
         if (!email) return;
         const recipient = email.recipient || "";
-        const fromEmail = user?.email || "";
+        const fromEmail = currentUser?.email || "";
         const outlookUrl = `https://outlook.live.com/owa/?path=/mail/action/compose&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(editedSubject)}&body=${encodeURIComponent(editedBody)}${fromEmail ? `&login_hint=${encodeURIComponent(fromEmail)}` : ""}`;
         window.open(outlookUrl, "_blank");
     };
@@ -91,7 +96,7 @@ function EmailOutput({ email, setEmail, loading, onGenerate, user }) {
     const handleSendDefault = () => {
         if (!email) return;
         const recipient = email.recipient || "";
-        const fromEmail = user?.email || "";
+        const fromEmail = currentUser?.email || "";
         const mailto = `mailto:${recipient}?subject=${encodeURIComponent(editedSubject)}&body=${encodeURIComponent(editedBody)}${fromEmail ? `&from=${encodeURIComponent(fromEmail)}` : ""}`;
         window.location.href = mailto;
     };
@@ -153,7 +158,7 @@ function EmailOutput({ email, setEmail, loading, onGenerate, user }) {
                     <div className="flex items-center gap-2">
                         <span className="font-semibold w-14 shrink-0">From:</span>
                         <span className="text-white bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
-                            {user?.name || "User"} &lt;{user?.email || "user@mail.com"}&gt;
+                            {currentUser?.name || "User"} &lt;{currentUser?.email || "user@mail.com"}&gt;
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
