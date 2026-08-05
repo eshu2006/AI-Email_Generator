@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from app.database.mongodb import db
 from app.utils.password import hash_password
 from app.utils.password import verify_password
@@ -14,10 +15,10 @@ def create_user(user):
 
     if existing_user:
 
-        return {
-            "success": False,
-            "message": "Email already exists"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists"
+        )
 
     new_user = {
 
@@ -47,20 +48,20 @@ def login_user(user):
 
     if not existing_user:
 
-        return {
-            "success": False,
-            "message": "Invalid Email"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Email"
+        )
 
     if not verify_password(
         user.password,
         existing_user["password"]
     ):
 
-        return {
-            "success": False,
-            "message": "Invalid Password"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Password"
+        )
 
     token = create_access_token(
         {

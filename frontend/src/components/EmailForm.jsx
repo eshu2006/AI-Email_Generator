@@ -1,17 +1,8 @@
 import { useState } from "react";
 
-import { generateEmail } from "../services/emailService";
-
 function EmailForm({
-
-    setEmail,
-
-    loading,
-
-    setLoading,
-
-    setReloadHistory
-
+    onGenerate,
+    loading
 }) {
 
     const [form, setForm] = useState({
@@ -40,17 +31,9 @@ function EmailForm({
 
     const handleSubmit = async () => {
 
-        setLoading(true);
-
         try {
 
-            const response = await generateEmail(form);
-
-            // Show generated email
-            setEmail(response);
-
-            // Refresh history sidebar
-            setReloadHistory(prev => !prev);
+            await onGenerate(form);
 
             // Optional: Clear the form after generating
             setForm({
@@ -64,13 +47,9 @@ function EmailForm({
 
         catch (error) {
 
-            alert("Failed to generate email");
-
             console.log(error);
 
         }
-
-        setLoading(false);
 
     };
 
